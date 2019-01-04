@@ -12,7 +12,7 @@ defmodule Defb.HTTP.Supervisor do
     children = [
       Plug.Cowboy.child_spec(
         scheme: :http,
-        plug: OpenAPI.HTTP.Router,
+        plug: Defb.HTTP.Router,
         options: [port: port, timeout: 70_000]
       )
     ]

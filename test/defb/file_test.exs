@@ -32,7 +32,6 @@ defmodule Defb.FileTest do
     assert length(files) > 0
   end
 
-
   test "match_code?/2 returns true when exact match between %File{} and status code" do
     %Defb.File{} = file = Defb.File.new("500.json", @json_content)
 

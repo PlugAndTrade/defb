@@ -1,18 +1,18 @@
 defmodule Defb do
-  @moduledoc """
-  Documentation for Defb.
-  """
+  use Application
+  require Logger
 
-  @doc """
-  Hello world.
+  @boot_msg "[Defb] default-backend started"
 
-  ## Examples
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
 
-      iex> Defb.hello()
-      :world
+    children = [
+      {Defb.HTTP.Supervisor, port: 4000}
+    ]
 
-  """
-  def hello do
-    :world
+    Logger.info(fn -> "#{@boot_msg}" end, ansi_color: :magenta)
+
+    Supervisor.start_link(children, strategy: :one_for_one, name: Defb.Supervisor)
   end
 end
