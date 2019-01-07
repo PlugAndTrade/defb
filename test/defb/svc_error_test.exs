@@ -11,7 +11,11 @@ defmodule Defb.SvcErrorTest do
   @annotations %{}
 
   setup do
-    configmap = %ConfigMap{metadata: %ObjectMeta{name: "test", namespace: "default", annotations: @annotations}, data: @data}
+    configmap = %ConfigMap{
+      metadata: %ObjectMeta{name: "test", namespace: "default", annotations: @annotations},
+      data: @data
+    }
+
     svc_error = SvcError.from(configmap)
 
     {:ok, svc_error: svc_error}
@@ -21,14 +25,25 @@ defmodule Defb.SvcErrorTest do
     assert %SvcError{} = svc_error
   end
 
-  test "from/1 sets name & namespace from metadata if no annotations is set", %{svc_error: svc_error} do
+  test "from/1 sets name & namespace from metadata if no annotations is set", %{
+    svc_error: svc_error
+  } do
     assert svc_error.name == "test"
     assert svc_error.namespace == "default"
   end
 
   test "from/1 sets name from configmap annotation when `alternate-name` is set" do
     name = "foobar"
-    configmap = %ConfigMap{metadata: %ObjectMeta{name: "test", namespace: "default", annotations: %{"nginx-custom-errors/alternate-name" => name}}, data: @data}
+
+    configmap = %ConfigMap{
+      metadata: %ObjectMeta{
+        name: "test",
+        namespace: "default",
+        annotations: %{"nginx-custom-errors/alternate-name" => name}
+      },
+      data: @data
+    }
+
     svc_error = SvcError.from(configmap)
 
     assert svc_error.name == name
@@ -76,5 +91,4 @@ defmodule Defb.SvcErrorTest do
 
     assert Defb.SvcError.full_name(svc_error) == "default/test"
   end
-
 end

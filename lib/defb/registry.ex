@@ -40,10 +40,11 @@ defmodule Defb.Registry do
   end
 
   def handle_call({:create, {name, resource}}, _from, %{table: table} = state) do
-    result = case lookup(table, name) do
-      {:ok, _svc_error} -> :ets.update_element(table, name, {2, resource})
-      {:error, :not_found} -> :ets.insert(table, {name, resource})
-    end
+    result =
+      case lookup(table, name) do
+        {:ok, _svc_error} -> :ets.update_element(table, name, {2, resource})
+        {:error, :not_found} -> :ets.insert(table, {name, resource})
+      end
 
     if result, do: {:reply, {:ok, resource}, state}, else: {:reply, {:error, resource}, state}
   end
