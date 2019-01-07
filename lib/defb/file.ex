@@ -38,5 +38,8 @@ defmodule Defb.File do
     |> Regex.match?(code)
   end
 
+  def match_content_type?(%__MODULE__{content_type: ct}, content_type),
+    do: ct == content_type
+
   def match_multiple?(code), do: Regex.match?(@m_regex, code)
 end

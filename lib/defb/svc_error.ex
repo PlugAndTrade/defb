@@ -14,9 +14,11 @@ defmodule Defb.SvcError do
     }
   end
 
-  def find_file(%__MODULE__{files: files}, status_code) do
+  def find_file(%__MODULE__{files: files}, content_type, status_code) do
     files
-    |> Enum.filter(&Defb.File.match_code?(&1, status_code))
+    |> Enum.filter(
+      &(Defb.File.match_content_type?(&1, content_type) and Defb.File.match_code?(&1, status_code))
+    )
     |> Enum.sort_by(& &1.status_code)
     |> List.first()
   end

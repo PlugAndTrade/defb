@@ -1,4 +1,5 @@
 defmodule Defb.HTTP.IngressError do
+  require Logger
   # X-Code	HTTP status code retuned by the request
   # X-Format	Value of the Accept header sent by the client
   # X-Original-URI	URI that caused the error
@@ -6,7 +7,7 @@ defmodule Defb.HTTP.IngressError do
   # X-Ingress-Name	Name of the Ingress where the backend is defined
   # X-Service-Name	Name of the Service backing the backend
   # X-Service-Port	Port number of the Service backing the backend
-  @x_headers ~w(x-code x-format x-original-uri x-ingress-name x-service-name x-service-port)
+  @x_headers ~w(x-code x-format x-original-uri x-namespace x-ingress-name x-service-name x-service-port)
 
   defstruct [
     :code,

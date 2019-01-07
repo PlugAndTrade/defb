@@ -54,10 +54,10 @@ defmodule Defb.SvcErrorTest do
     assert [%Defb.File{} | _tail] = svc_error.files
   end
 
-  test "find_file/2 can find a specific file by status_code" do
+  test "find_file/2 can find a specific file by content_type & status_code" do
     files = Defb.File.new(@data)
     svc_error = %Defb.SvcError{files: files}
-    file = Defb.SvcError.find_file(svc_error, 500)
+    file = Defb.SvcError.find_file(svc_error, "text/html", 500)
 
     assert file.status_code == "500"
   end
@@ -65,7 +65,7 @@ defmodule Defb.SvcErrorTest do
   test "find_file/2 will return a explicit match before a wildcard match when both exist" do
     files = Defb.File.new(%{"500.html" => "<p></p>", "5xx.html" => "<p></p>"})
     svc_error = %Defb.SvcError{files: files}
-    file = Defb.SvcError.find_file(svc_error, 500)
+    file = Defb.SvcError.find_file(svc_error, "text/html", 500)
 
     assert file.status_code == "500"
   end
@@ -73,7 +73,7 @@ defmodule Defb.SvcErrorTest do
   test "find_file/2 returns the more specific error when there's multiple matches" do
     files = Defb.File.new(%{"5xx.html" => "<p></p>", "50x.html" => "<p></p>"})
     svc_error = %Defb.SvcError{files: files}
-    file = Defb.SvcError.find_file(svc_error, 500)
+    file = Defb.SvcError.find_file(svc_error, "text/html", 500)
 
     assert file.status_code == "50x"
   end
@@ -81,7 +81,7 @@ defmodule Defb.SvcErrorTest do
   test "find_file/2 returns nil when no matches are present" do
     files = Defb.File.new(%{"4xx.html" => "<p></p>"})
     svc_error = %Defb.SvcError{files: files}
-    file = Defb.SvcError.find_file(svc_error, 500)
+    file = Defb.SvcError.find_file(svc_error, "text/html", 500)
 
     assert Kernel.is_nil(file)
   end

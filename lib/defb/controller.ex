@@ -19,7 +19,6 @@ defmodule Defb.Controller do
 
   @impl Netex.Controller
   def watch_fn(_resource, config) do
-    Logger.info("#{__MODULE__} :: Watch fn #{inspect(config)}")
     Kazan.Apis.Core.V1.watch_config_map_list_for_all_namespaces!(config)
   end
 
@@ -27,7 +26,6 @@ defmodule Defb.Controller do
   def list_fn(opts \\ [])
 
   def list_fn(config) do
-    Logger.info("#{__MODULE__} :: list fn #{inspect(config)}")
     Kazan.Apis.Core.V1.list_config_map_for_all_namespaces!(config)
   end
 
@@ -62,7 +60,9 @@ defmodule Defb.Controller do
 
       {:error, reason} ->
         Logger.error(fn ->
-          "#{__MODULE__} REPLACE :: #{Defb.SvcError.full_name(resource)} failed: #{inspect(reason)}"
+          "#{__MODULE__} REPLACE :: #{Defb.SvcError.full_name(resource)} failed: #{
+            inspect(reason)
+          }"
         end)
     end
 
