@@ -11,7 +11,7 @@ defmodule Defb.HTTP.Router do
 
   @ok ~s({"status": "ok"})
   @default_response "404 - default backend"
-  @registry Defb.Registry
+  @store Defb.Store
 
   get "/healthz" do
     conn
@@ -23,7 +23,7 @@ defmodule Defb.HTTP.Router do
     key = namespace <> "/" <> name
 
     {status_code, response} =
-      case Defb.Registry.lookup(@registry, key) do
+      case Defb.Store.lookup(@store, key) do
         {:ok, resource} -> {200, resource}
         {:error, :not_found} -> {404, %{"status" => "#{key} does not exist"}}
       end
@@ -37,7 +37,7 @@ defmodule Defb.HTTP.Router do
     %IngressError{code: status_code} = ing_err = IngressError.from(conn)
 
     {content_type, content} =
-      case Defb.Resolver.resolve(ing_err, @registry) do
+      case Defb.Store.resolve(@store, ing_err) do
         %Defb.Page{content: content, content_type: ct} ->
           {ct, content}
 

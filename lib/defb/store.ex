@@ -1,13 +1,33 @@
-defmodule Defb.Registry do
+defmodule Defb.Store do
   use GenServer
   require Logger
 
+  alias Defb.HTTP.IngressError
   alias Defb.SvcError
+
+  @fallback_name "__FALLBACK__/__FALLBACK"
 
   def lookup(table, name) do
     case :ets.lookup(table, name) do
       [{^name, svc_error}] -> {:ok, svc_error}
       [] -> {:error, :not_found}
+    end
+  end
+
+  def resolve(
+        table,
+        %IngressError{service_name: nil, namespace: nil, format: format, code: code}
+      ) do
+    try_resolve(table, @fallback_name, format, code)
+  end
+
+  def resolve(
+        table,
+        %IngressError{service_name: name, namespace: namespace, format: format, code: code}
+      ) do
+    case try_resolve(table, namespace <> "/" <> name, format, code) do
+      %Defb.Page{} = page -> page
+      :not_found -> try_resolve(table, @fallback_name, format, code)
     end
   end
 
@@ -60,5 +80,15 @@ defmodule Defb.Registry do
   def handle_call({:delete, name}, _from, %{table: table} = state) do
     _ = :ets.delete(table, name)
     {:reply, :ok, state}
+  end
+
+  defp try_resolve(table, name, format, code) do
+    with {:ok, %SvcError{} = svc_error} <- lookup(table, name),
+         page when not is_nil(page) <- SvcError.find_page(svc_error, format, code) do
+      page
+    else
+      {:error, :not_found} -> :not_found
+      nil -> :not_found
+    end
   end
 end

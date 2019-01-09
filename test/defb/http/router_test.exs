@@ -47,8 +47,8 @@ defmodule Defb.HTTP.RouterTest do
         ]
       }
 
-      _ = Defb.Registry.delete(Defb.Registry, resource)
-      {:ok, res} = Defb.Registry.create(Defb.Registry, resource)
+      _ = Defb.Store.delete(Defb.Store, resource)
+      {:ok, res} = Defb.Store.create(Defb.Store, resource)
 
       conn =
         :get

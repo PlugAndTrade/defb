@@ -13,7 +13,7 @@ defmodule Defb.Controller do
     {:ok,
      %{
        conn: Keyword.fetch!(opts, :conn),
-       registry: Keyword.fetch!(opts, :registry)
+       store: Keyword.fetch!(opts, :store)
      }}
   end
 
@@ -30,10 +30,10 @@ defmodule Defb.Controller do
   end
 
   @impl Netex.Controller
-  def handle_added(%Watcher.Event{object: object}, %{registry: registry} = state) do
+  def handle_added(%Watcher.Event{object: object}, %{store: store} = state) do
     resource = Defb.SvcError.from(object)
 
-    case Defb.Registry.create(registry, resource) do
+    case Defb.Store.create(store, resource) do
       {:ok, resource} ->
         Logger.info(fn ->
           "#{__MODULE__} :: ADD #{Defb.SvcError.full_name(resource)} successfull!"
@@ -49,10 +49,10 @@ defmodule Defb.Controller do
   end
 
   @impl Netex.Controller
-  def handle_modified(%Watcher.Event{object: object}, %{registry: registry} = state) do
+  def handle_modified(%Watcher.Event{object: object}, %{store: store} = state) do
     resource = Defb.SvcError.from(object)
 
-    case Defb.Registry.replace(registry, resource) do
+    case Defb.Store.replace(store, resource) do
       {:ok, resource} ->
         Logger.info(fn ->
           "#{__MODULE__} REPLACE :: #{Defb.SvcError.full_name(resource)} successfull!"
@@ -70,21 +70,21 @@ defmodule Defb.Controller do
   end
 
   @impl Netex.Controller
-  def handle_deleted(%Watcher.Event{object: object}, %{registry: registry} = state) do
+  def handle_deleted(%Watcher.Event{object: object}, %{store: store} = state) do
     resource = Defb.SvcError.from(object)
 
     Logger.info(fn -> "#{__MODULE__} DELETE :: resource #{Defb.SvcError.full_name(resource)}" end)
 
-    Defb.Registry.delete(registry, resource)
+    Defb.Store.delete(store, resource)
 
     state
   end
 
   @impl Netex.Controller
-  def handle_sync(%ConfigMapList{items: items}, %{registry: registry} = state) do
+  def handle_sync(%ConfigMapList{items: items}, %{store: store} = state) do
     err =
       items
-      |> Enum.map(&Defb.Registry.create(registry, Defb.SvcError.from(&1)))
+      |> Enum.map(&Defb.Store.create(store, Defb.SvcError.from(&1)))
       |> Enum.find(fn {result, _} -> result == :error end)
 
     case err do

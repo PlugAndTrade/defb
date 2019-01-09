@@ -16,12 +16,12 @@ defmodule Defb do
 
     children = [
       {Defb.HTTP.Supervisor, port: 4000},
-      {Defb.Registry, name: Defb.Registry},
-      {Defb.SvcError.Defaults, [{pages_dir, Defb.Registry}]},
+      {Defb.Store, name: Defb.Store},
+      {Defb.SvcError.Defaults, [{pages_dir, Defb.Store}]},
       Defb.Controller.child_spec([
         conn,
         [
-          registry: Defb.Registry,
+          store: Defb.Store,
           params: [
             label_selector: @label_selector
           ]

@@ -9,7 +9,7 @@ defmodule Defb.SvcError.Defaults do
     Task.start_link(__MODULE__, :run, opts)
   end
 
-  def run({path, registry}) do
+  def run({path, store}) do
     pages = read_all(path)
     error = %Defb.SvcError{name: @name, namespace: @name, pages: pages}
 
@@ -18,7 +18,7 @@ defmodule Defb.SvcError.Defaults do
       |> Enum.map(fn {file, _} -> file end)
       |> Enum.join("\n")
 
-    case Defb.Registry.create(registry, error) do
+    case Defb.Store.create(store, error) do
       {:ok, _} ->
         Logger.info(fn ->
           "Fallback templates created successfully! Errors supported:\n#{types}"

@@ -1,5 +1,6 @@
 defmodule Defb.SvcError do
   alias Kazan.Apis.Core.V1.ConfigMap
+
   @derive [Poison.Encoder]
   defstruct name: nil, namespace: nil, pages: []
 
@@ -24,11 +25,12 @@ defmodule Defb.SvcError do
     |> List.first()
   end
 
-  def actual_name(%{alternate_name: a_name}, name) when not is_nil(a_name),
-    do: a_name
-
-  def actual_name(_annotations, name), do: name
-
   def full_name(%__MODULE__{name: name, namespace: namespace}),
     do: namespace <> "/" <> name
+
+
+  defp actual_name(%{alternate_name: a_name}, name) when not is_nil(a_name),
+    do: a_name
+
+  defp actual_name(_annotations, name), do: name
 end
