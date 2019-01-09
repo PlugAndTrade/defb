@@ -12,7 +12,7 @@ defmodule Defb do
     pages_dir = Confex.fetch_env!(:defb, :pages_dir)
 
     mode = Keyword.fetch!(k8s_conf, :mode)
-    conn = Defb.Config.k8s_server(mode, k8s_conf)
+    conn = k8s_server(mode, k8s_conf)
 
     children = [
       {Defb.HTTP.Supervisor, port: 4000},
@@ -33,4 +33,10 @@ defmodule Defb do
 
     Supervisor.start_link(children, strategy: :one_for_one, name: Defb.Supervisor)
   end
+
+  defp k8s_server(:proxy, conf),
+    do: %Kazan.Server{url: Keyword.fetch!(conf, :api_server)}
+
+  defp k8s_server(:in_cluster, _conf),
+    do: Kazan.Server.in_cluster()
 end

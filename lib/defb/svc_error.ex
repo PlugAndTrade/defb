@@ -28,7 +28,6 @@ defmodule Defb.SvcError do
   def full_name(%__MODULE__{name: name, namespace: namespace}),
     do: namespace <> "/" <> name
 
-
   defp actual_name(%{alternate_name: a_name}, name) when not is_nil(a_name),
     do: a_name
 
