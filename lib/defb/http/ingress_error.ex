@@ -21,8 +21,18 @@ defmodule Defb.HTTP.IngressError do
 
   def from(%Plug.Conn{req_headers: headers}) do
     params = for {h, v} <- headers, h in @x_headers, do: {normalize(h), v}
+    params = set_status_code(params)
 
     struct(__MODULE__, params)
+  end
+
+  defp set_status_code(params) do
+    {sc, _} =
+      params
+      |> Keyword.get(:code, "404")
+      |> Integer.parse()
+
+    Keyword.put(params, :code, sc)
   end
 
   defp normalize(header) do

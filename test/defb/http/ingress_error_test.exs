@@ -23,7 +23,7 @@ defmodule Defb.HTTP.IngressErrorTest do
     conn = %Plug.Conn{req_headers: @headers}
 
     assert %IngressError{} = ing_err = IngressError.from(conn)
-    assert ing_err.code == "500"
+    assert ing_err.code == 500
     assert ing_err.format == "application/json"
     assert ing_err.original_uri == "/test"
     assert ing_err.ingress_name == "test-ingress"

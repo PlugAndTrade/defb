@@ -9,24 +9,26 @@ defmodule Defb.HTTP.Router do
   plug(:match)
   plug(:dispatch)
 
+  @ok ~S({"status": "ok"})
+  @default_response "404 - default backend"
+
   get "/healthz" do
     conn
     |> Plug.Conn.put_resp_content_type("application/json")
-    |> Plug.Conn.send_resp(200, "{\"status\": \"ok\"}")
+    |> Plug.Conn.send_resp(200, @ok)
   end
 
   match _ do
-    ing_err = IngressError.from(conn)
+    %IngressError{code: status_code} = ing_err = IngressError.from(conn)
 
-    {status_code, content_type, content} =
+    {content_type, content} =
       case Defb.Resolver.resolve(ing_err, Defb.Registry) do
         %Defb.File{content: content, content_type: ct} ->
-          {sc, _} = Integer.parse(ing_err.code)
-          {sc, ct, content}
+          {ct, content}
 
         # TODO fix
-        :fallback ->
-          {404, "text/html", "<html><body><p>hello</p></body></html>"}
+        :not_found ->
+          {"text/plain", @default_response}
       end
 
     conn
