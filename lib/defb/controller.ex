@@ -31,17 +31,17 @@ defmodule Defb.Controller do
 
   @impl Netex.Controller
   def handle_added(%Watcher.Event{object: object}, %{store: store} = state) do
-    resource = Defb.SvcError.from(object)
+    resource = Defb.ServiceError.from(object)
 
     case Defb.Store.create(store, resource) do
       {:ok, resource} ->
         Logger.info(fn ->
-          "#{__MODULE__} :: ADD #{Defb.SvcError.full_name(resource)} successfull!"
+          "#{__MODULE__} :: ADD #{Defb.ServiceError.full_name(resource)} successfull!"
         end)
 
       {:error, reason} ->
         Logger.error(fn ->
-          "#{__MODULE__} :: ADD #{Defb.SvcError.full_name(resource)} failed: #{inspect(reason)}"
+          "#{__MODULE__} :: ADD #{Defb.ServiceError.full_name(resource)} failed: #{inspect(reason)}"
         end)
     end
 
@@ -50,17 +50,17 @@ defmodule Defb.Controller do
 
   @impl Netex.Controller
   def handle_modified(%Watcher.Event{object: object}, %{store: store} = state) do
-    resource = Defb.SvcError.from(object)
+    resource = Defb.ServiceError.from(object)
 
     case Defb.Store.replace(store, resource) do
       {:ok, resource} ->
         Logger.info(fn ->
-          "#{__MODULE__} REPLACE :: #{Defb.SvcError.full_name(resource)} successfull!"
+          "#{__MODULE__} REPLACE :: #{Defb.ServiceError.full_name(resource)} successfull!"
         end)
 
       {:error, reason} ->
         Logger.error(fn ->
-          "#{__MODULE__} REPLACE :: #{Defb.SvcError.full_name(resource)} failed: #{
+          "#{__MODULE__} REPLACE :: #{Defb.ServiceError.full_name(resource)} failed: #{
             inspect(reason)
           }"
         end)
@@ -71,9 +71,9 @@ defmodule Defb.Controller do
 
   @impl Netex.Controller
   def handle_deleted(%Watcher.Event{object: object}, %{store: store} = state) do
-    resource = Defb.SvcError.from(object)
+    resource = Defb.ServiceError.from(object)
 
-    Logger.info(fn -> "#{__MODULE__} DELETE :: resource #{Defb.SvcError.full_name(resource)}" end)
+    Logger.info(fn -> "#{__MODULE__} DELETE :: resource #{Defb.ServiceError.full_name(resource)}" end)
 
     Defb.Store.delete(store, resource)
 
@@ -84,7 +84,7 @@ defmodule Defb.Controller do
   def handle_sync(%ConfigMapList{items: items}, %{store: store} = state) do
     err =
       items
-      |> Enum.map(&Defb.Store.create(store, Defb.SvcError.from(&1)))
+      |> Enum.map(&Defb.Store.create(store, Defb.ServiceError.from(&1)))
       |> Enum.find(fn {result, _} -> result == :error end)
 
     case err do

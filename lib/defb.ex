@@ -17,7 +17,7 @@ defmodule Defb do
     children = [
       {Defb.HTTP.Supervisor, port: 4000},
       {Defb.Store, name: Defb.Store},
-      {Defb.SvcError.Defaults, [{pages_dir, Defb.Store}]},
+      {Defb.ServiceError.Defaults, [{pages_dir, Defb.Store}]},
       Defb.Controller.child_spec([
         conn,
         [

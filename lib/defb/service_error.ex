@@ -1,4 +1,4 @@
-defmodule Defb.SvcError do
+defmodule Defb.ServiceError do
   alias Kazan.Apis.Core.V1.ConfigMap
 
   @derive [Poison.Encoder]
@@ -6,7 +6,7 @@ defmodule Defb.SvcError do
 
   def from(%ConfigMap{metadata: metadata, data: data}) do
     pages = Defb.Page.new(data)
-    annotations = Defb.SvcError.Annotations.parse(metadata.annotations)
+    annotations = Defb.ServiceError.Annotations.parse(metadata.annotations)
     name = actual_name(annotations, metadata.name)
 
     %__MODULE__{

@@ -1,7 +1,7 @@
-defmodule Defb.SvcErrorTest do
+defmodule Defb.ServiceErrorTest do
   use ExUnit.Case
 
-  alias Defb.SvcError
+  alias Defb.ServiceError
   alias Kazan.Apis.Core.V1.ConfigMap
   alias Kazan.Models.Apimachinery.Meta.V1.ObjectMeta
 
@@ -16,13 +16,13 @@ defmodule Defb.SvcErrorTest do
       data: @data
     }
 
-    svc_error = SvcError.from(configmap)
+    svc_error = ServiceError.from(configmap)
 
     {:ok, svc_error: svc_error}
   end
 
-  test "from/1 turns a configmap to a %SvcError", %{svc_error: svc_error} do
-    assert %SvcError{} = svc_error
+  test "from/1 turns a configmap to a %ServiceError", %{svc_error: svc_error} do
+    assert %ServiceError{} = svc_error
   end
 
   test "from/1 sets name & namespace from metadata if no annotations is set", %{
@@ -44,7 +44,7 @@ defmodule Defb.SvcErrorTest do
       data: @data
     }
 
-    svc_error = SvcError.from(configmap)
+    svc_error = ServiceError.from(configmap)
 
     assert svc_error.name == name
   end
@@ -56,39 +56,39 @@ defmodule Defb.SvcErrorTest do
 
   test "find_page/2 can find a specific page by content_type & status_code" do
     pages = Defb.Page.new(@data)
-    svc_error = %Defb.SvcError{pages: pages}
-    page = Defb.SvcError.find_page(svc_error, "text/html", 500)
+    svc_error = %Defb.ServiceError{pages: pages}
+    page = Defb.ServiceError.find_page(svc_error, "text/html", 500)
 
     assert page.status_code == "500"
   end
 
   test "find_page/2 will return a explicit match before a wildcard match when both exist" do
     pages = Defb.Page.new(%{"500.html" => "<p></p>", "5xx.html" => "<p></p>"})
-    svc_error = %Defb.SvcError{pages: pages}
-    page = Defb.SvcError.find_page(svc_error, "text/html", 500)
+    svc_error = %Defb.ServiceError{pages: pages}
+    page = Defb.ServiceError.find_page(svc_error, "text/html", 500)
 
     assert page.status_code == "500"
   end
 
   test "find_page/2 returns the more specific error when there's multiple matches" do
     pages = Defb.Page.new(%{"5xx.html" => "<p></p>", "50x.html" => "<p></p>"})
-    svc_error = %Defb.SvcError{pages: pages}
-    page = Defb.SvcError.find_page(svc_error, "text/html", 500)
+    svc_error = %Defb.ServiceError{pages: pages}
+    page = Defb.ServiceError.find_page(svc_error, "text/html", 500)
 
     assert page.status_code == "50x"
   end
 
   test "find_page/2 returns nil when no matches are present" do
     pages = Defb.Page.new(%{"4xx.html" => "<p></p>"})
-    svc_error = %Defb.SvcError{pages: pages}
-    page = Defb.SvcError.find_page(svc_error, "text/html", 500)
+    svc_error = %Defb.ServiceError{pages: pages}
+    page = Defb.ServiceError.find_page(svc_error, "text/html", 500)
 
     assert Kernel.is_nil(page)
   end
 
-  test "full_name/1 returns name + namespace of the SvcError" do
-    svc_error = %Defb.SvcError{name: "test", namespace: "default"}
+  test "full_name/1 returns name + namespace of the ServiceError" do
+    svc_error = %Defb.ServiceError{name: "test", namespace: "default"}
 
-    assert Defb.SvcError.full_name(svc_error) == "default/test"
+    assert Defb.ServiceError.full_name(svc_error) == "default/test"
   end
 end

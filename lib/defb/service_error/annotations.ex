@@ -1,4 +1,4 @@
-defmodule Defb.SvcError.Annotations do
+defmodule Defb.ServiceError.Annotations do
   @prefix "nginx-custom-errors"
   @annotation_keys ~w(alternate-name)
 

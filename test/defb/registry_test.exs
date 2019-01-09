@@ -1,10 +1,10 @@
 defmodule Defb.StoreTest do
   use ExUnit.Case
-  alias Defb.SvcError
+  alias Defb.ServiceError
 
   setup do
     table = :ets.new(:test, [])
-    svc_error = %SvcError{name: "test", namespace: "default"}
+    svc_error = %ServiceError{name: "test", namespace: "default"}
     {:ok, table: table, svc_error: svc_error}
   end
 
@@ -27,20 +27,20 @@ defmodule Defb.StoreTest do
   describe "Store proc" do
     setup context do
       _ = start_supervised!({Defb.Store, name: context.test})
-      svc_error = %SvcError{name: "test", namespace: "default"}
+      svc_error = %ServiceError{name: "test", namespace: "default"}
       {:ok, %{table: context.test, svc_error: svc_error}}
     end
 
     test "create inserts the resource", %{table: table, svc_error: svc_error} do
       assert {:ok, _} = Defb.Store.create(table, svc_error)
-      assert {:ok, ^svc_error} = Defb.Store.lookup(table, SvcError.full_name(svc_error))
+      assert {:ok, ^svc_error} = Defb.Store.lookup(table, ServiceError.full_name(svc_error))
     end
 
     test "create overwrites previous resource with same name", %{
       table: table,
       svc_error: svc_error
     } do
-      new_res = %SvcError{name: "test", namespace: "default", pages: ["foo"]}
+      new_res = %ServiceError{name: "test", namespace: "default", pages: ["foo"]}
       assert {:ok, old} = Defb.Store.create(table, svc_error)
       assert {:ok, new} = Defb.Store.create(table, new_res)
 
@@ -50,7 +50,7 @@ defmodule Defb.StoreTest do
     end
 
     test "replace overwrites previous resource", %{table: table, svc_error: svc_error} do
-      new_res = %SvcError{name: "test", namespace: "default", pages: ["foo"]}
+      new_res = %ServiceError{name: "test", namespace: "default", pages: ["foo"]}
       assert {:ok, old} = Defb.Store.create(table, svc_error)
       assert {:ok, new} = Defb.Store.replace(table, new_res)
 

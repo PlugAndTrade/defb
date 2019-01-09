@@ -3,9 +3,9 @@ defmodule Defb.Store do
   require Logger
 
   alias Defb.HTTP.IngressError
-  alias Defb.SvcError
+  alias Defb.ServiceError
 
-  @fallback_name "__FALLBACK__/__FALLBACK"
+  @fallback_name Application.get_env(:defb, :fallback_namespace) <> "/" <> Application.get_env(:defb, :fallback_name)
 
   def lookup(table, name) do
     case :ets.lookup(table, name) do
@@ -37,16 +37,16 @@ defmodule Defb.Store do
     GenServer.start_link(__MODULE__, table, opts)
   end
 
-  def create(server, %SvcError{} = svc_error) do
-    GenServer.call(server, {:create, {SvcError.full_name(svc_error), svc_error}})
+  def create(server, %ServiceError{} = svc_error) do
+    GenServer.call(server, {:create, {ServiceError.full_name(svc_error), svc_error}})
   end
 
-  def replace(server, %SvcError{} = svc_error) do
-    GenServer.call(server, {:replace, {SvcError.full_name(svc_error), svc_error}})
+  def replace(server, %ServiceError{} = svc_error) do
+    GenServer.call(server, {:replace, {ServiceError.full_name(svc_error), svc_error}})
   end
 
-  def delete(server, %SvcError{} = svc_error) do
-    GenServer.call(server, {:delete, {SvcError.full_name(svc_error)}})
+  def delete(server, %ServiceError{} = svc_error) do
+    GenServer.call(server, {:delete, {ServiceError.full_name(svc_error)}})
   end
 
   def delete(server, name, namespace) do
@@ -83,8 +83,8 @@ defmodule Defb.Store do
   end
 
   defp try_resolve(table, name, format, code) do
-    with {:ok, %SvcError{} = svc_error} <- lookup(table, name),
-         page when not is_nil(page) <- SvcError.find_page(svc_error, format, code) do
+    with {:ok, %ServiceError{} = svc_error} <- lookup(table, name),
+         page when not is_nil(page) <- ServiceError.find_page(svc_error, format, code) do
       page
     else
       {:error, :not_found} -> :not_found

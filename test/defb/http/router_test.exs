@@ -39,7 +39,7 @@ defmodule Defb.HTTP.RouterTest do
     test "should return a correct response when ingress headers are set and a match exists" do
       body = "<p>foo</p>"
 
-      resource = %Defb.SvcError{
+      resource = %Defb.ServiceError{
         name: "test",
         namespace: "default",
         pages: [

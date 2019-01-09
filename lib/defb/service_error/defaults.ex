@@ -1,9 +1,11 @@
-defmodule Defb.SvcError.Defaults do
+defmodule Defb.ServiceError.Defaults do
   use Task
   require Logger
+
   import Defb.Utils.Dir
 
-  @name "__FALLBACK__"
+  @name Application.get_env(:defb, :fallback_name)
+  @namespace Application.get_env(:defb, :fallback_namespace)
 
   def start_link(opts) do
     Task.start_link(__MODULE__, :run, opts)
@@ -11,7 +13,7 @@ defmodule Defb.SvcError.Defaults do
 
   def run({path, store}) do
     pages = read_all(path)
-    error = %Defb.SvcError{name: @name, namespace: @name, pages: pages}
+    error = %Defb.ServiceError{name: @name, namespace: @namespace, pages: pages}
 
     types =
       pages
