@@ -49,41 +49,41 @@ defmodule Defb.SvcErrorTest do
     assert svc_error.name == name
   end
 
-  test "from/1 configmap data is parsed to %File{}", %{svc_error: svc_error} do
-    assert length(svc_error.files) > 0
-    assert [%Defb.File{} | _tail] = svc_error.files
+  test "from/1 configmap data is parsed to %Page{}", %{svc_error: svc_error} do
+    assert length(svc_error.pages) > 0
+    assert [%Defb.Page{} | _tail] = svc_error.pages
   end
 
-  test "find_file/2 can find a specific file by content_type & status_code" do
-    files = Defb.File.new(@data)
-    svc_error = %Defb.SvcError{files: files}
-    file = Defb.SvcError.find_file(svc_error, "text/html", 500)
+  test "find_page/2 can find a specific page by content_type & status_code" do
+    pages = Defb.Page.new(@data)
+    svc_error = %Defb.SvcError{pages: pages}
+    page = Defb.SvcError.find_page(svc_error, "text/html", 500)
 
-    assert file.status_code == "500"
+    assert page.status_code == "500"
   end
 
-  test "find_file/2 will return a explicit match before a wildcard match when both exist" do
-    files = Defb.File.new(%{"500.html" => "<p></p>", "5xx.html" => "<p></p>"})
-    svc_error = %Defb.SvcError{files: files}
-    file = Defb.SvcError.find_file(svc_error, "text/html", 500)
+  test "find_page/2 will return a explicit match before a wildcard match when both exist" do
+    pages = Defb.Page.new(%{"500.html" => "<p></p>", "5xx.html" => "<p></p>"})
+    svc_error = %Defb.SvcError{pages: pages}
+    page = Defb.SvcError.find_page(svc_error, "text/html", 500)
 
-    assert file.status_code == "500"
+    assert page.status_code == "500"
   end
 
-  test "find_file/2 returns the more specific error when there's multiple matches" do
-    files = Defb.File.new(%{"5xx.html" => "<p></p>", "50x.html" => "<p></p>"})
-    svc_error = %Defb.SvcError{files: files}
-    file = Defb.SvcError.find_file(svc_error, "text/html", 500)
+  test "find_page/2 returns the more specific error when there's multiple matches" do
+    pages = Defb.Page.new(%{"5xx.html" => "<p></p>", "50x.html" => "<p></p>"})
+    svc_error = %Defb.SvcError{pages: pages}
+    page = Defb.SvcError.find_page(svc_error, "text/html", 500)
 
-    assert file.status_code == "50x"
+    assert page.status_code == "50x"
   end
 
-  test "find_file/2 returns nil when no matches are present" do
-    files = Defb.File.new(%{"4xx.html" => "<p></p>"})
-    svc_error = %Defb.SvcError{files: files}
-    file = Defb.SvcError.find_file(svc_error, "text/html", 500)
+  test "find_page/2 returns nil when no matches are present" do
+    pages = Defb.Page.new(%{"4xx.html" => "<p></p>"})
+    svc_error = %Defb.SvcError{pages: pages}
+    page = Defb.SvcError.find_page(svc_error, "text/html", 500)
 
-    assert Kernel.is_nil(file)
+    assert Kernel.is_nil(page)
   end
 
   test "full_name/1 returns name + namespace of the SvcError" do

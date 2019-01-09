@@ -10,11 +10,11 @@ defmodule Defb.SvcError.Defaults do
   end
 
   def run({path, registry}) do
-    files = read_all(path)
-    error = %Defb.SvcError{name: @name, namespace: @name, files: files}
+    pages = read_all(path)
+    error = %Defb.SvcError{name: @name, namespace: @name, pages: pages}
 
     types =
-      files
+      pages
       |> Enum.map(fn {file, _} -> file end)
       |> Enum.join("\n")
 

@@ -25,6 +25,7 @@ defmodule Defb.MixProject do
       {:kazan, "~> 0.10"},
       {:confex, "~> 3.3.1"},
       {:mime, "~> 1.2"},
+      {:poison, "~> 4.0.0"},
       {:netex,
        git: "https://github.com/drowzy/netex", ref: "2730a3f193cfefafaf2c3323d0b89889b95d0dee"},
       {:plug, "~> 1.7"},

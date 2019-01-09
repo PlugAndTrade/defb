@@ -1,23 +1,24 @@
 defmodule Defb.SvcError do
   alias Kazan.Apis.Core.V1.ConfigMap
-  defstruct name: nil, namespace: nil, files: []
+  @derive [Poison.Encoder]
+  defstruct name: nil, namespace: nil, pages: []
 
   def from(%ConfigMap{metadata: metadata, data: data}) do
-    files = Defb.File.new(data)
+    pages = Defb.Page.new(data)
     annotations = Defb.SvcError.Annotations.parse(metadata.annotations)
     name = actual_name(annotations, metadata.name)
 
     %__MODULE__{
       name: name,
       namespace: metadata.namespace,
-      files: files
+      pages: pages
     }
   end
 
-  def find_file(%__MODULE__{files: files}, content_type, status_code) do
-    files
+  def find_page(%__MODULE__{pages: pages}, content_type, status_code) do
+    pages
     |> Enum.filter(
-      &(Defb.File.match_content_type?(&1, content_type) and Defb.File.match_code?(&1, status_code))
+      &(Defb.Page.match_content_type?(&1, content_type) and Defb.Page.match_code?(&1, status_code))
     )
     |> Enum.sort_by(& &1.status_code)
     |> List.first()

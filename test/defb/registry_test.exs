@@ -40,23 +40,23 @@ defmodule Defb.RegistryTest do
       table: table,
       svc_error: svc_error
     } do
-      new_res = %SvcError{name: "test", namespace: "default", files: ["foo"]}
+      new_res = %SvcError{name: "test", namespace: "default", pages: ["foo"]}
       assert {:ok, old} = Defb.Registry.create(table, svc_error)
       assert {:ok, new} = Defb.Registry.create(table, new_res)
 
       assert old.name == new.name
       assert old.namespace == new.namespace
-      assert length(old.files) < length(new.files)
+      assert length(old.pages) < length(new.pages)
     end
 
     test "replace overwrites previous resource", %{table: table, svc_error: svc_error} do
-      new_res = %SvcError{name: "test", namespace: "default", files: ["foo"]}
+      new_res = %SvcError{name: "test", namespace: "default", pages: ["foo"]}
       assert {:ok, old} = Defb.Registry.create(table, svc_error)
       assert {:ok, new} = Defb.Registry.replace(table, new_res)
 
       assert old.name == new.name
       assert old.namespace == new.namespace
-      assert length(old.files) < length(new.files)
+      assert length(old.pages) < length(new.pages)
     end
 
     test "replace with missing resource returns {:error, :not_found}", %{

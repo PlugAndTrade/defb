@@ -42,8 +42,8 @@ defmodule Defb.HTTP.RouterTest do
       resource = %Defb.SvcError{
         name: "test",
         namespace: "default",
-        files: [
-          Defb.File.new("500.html", body)
+        pages: [
+          Defb.Page.new("500.html", body)
         ]
       }
 

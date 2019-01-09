@@ -1,6 +1,7 @@
-defmodule Defb.File do
+defmodule Defb.Page do
   @m_regex ~r/[x]+/
 
+  @derive [Poison.Encoder]
   defstruct [
     :status_code,
     :content,

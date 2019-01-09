@@ -17,15 +17,15 @@ defmodule Defb.Resolver do
         registry
       ) do
     case try_resolve(namespace <> "/" <> name, format, code, registry) do
-      %Defb.File{} = file -> file
+      %Defb.Page{} = page -> page
       :not_found -> try_resolve(@fallback_name, format, code, registry)
     end
   end
 
   def try_resolve(name, format, code, registry) do
     with {:ok, %SvcError{} = svc_error} <- Defb.Registry.lookup(registry, name),
-         file when not is_nil(file) <- SvcError.find_file(svc_error, format, code) do
-      file
+         page when not is_nil(page) <- SvcError.find_page(svc_error, format, code) do
+      page
     else
       {:error, :not_found} -> :not_found
       nil -> :not_found
