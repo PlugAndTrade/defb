@@ -5,7 +5,10 @@ defmodule Defb.Store do
   alias Defb.HTTP.IngressError
   alias Defb.ServiceError
 
-  @fallback_name Application.get_env(:defb, :fallback_namespace) <> "/" <> Application.get_env(:defb, :fallback_name)
+  @fallback_name ServiceError.full_name(
+    Application.get_env(:defb, :fallback_namespace),
+    Application.get_env(:defb, :fallback_name)
+  )
 
   def lookup(table, name) do
     case :ets.lookup(table, name) do
@@ -25,7 +28,7 @@ defmodule Defb.Store do
         table,
         %IngressError{service_name: name, namespace: namespace, format: format, code: code}
       ) do
-    case try_resolve(table, namespace <> "/" <> name, format, code) do
+    case try_resolve(table, ServiceError.full_name(namespace, name), format, code) do
       %Defb.Page{} = page -> page
       :not_found -> try_resolve(table, @fallback_name, format, code)
     end
@@ -50,7 +53,7 @@ defmodule Defb.Store do
   end
 
   def delete(server, name, namespace) do
-    GenServer.call(server, {:delete, namespace <> "/" <> name})
+    GenServer.call(server, {:delete, ServiceError.full_name(namespace, name)})
   end
 
   def init(table_name) do

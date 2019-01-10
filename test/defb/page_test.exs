@@ -11,18 +11,18 @@ defmodule Defb.PageTest do
     assert page.content == @html_content
     assert page.content_type == "text/html"
     assert page.ext == "html"
-    assert page.multi_match? == false
+    assert page.multi_match == false
   end
 
   test "new/2 should return a %Page{} with multi_match when using `xx` patterns" do
-    assert %Defb.Page{multi_match?: true} = page = Defb.Page.new("5xx.html", @html_content)
+    assert %Defb.Page{multi_match: true} = Defb.Page.new("5xx.html", @html_content)
   end
 
   test "new/2 can handle different content types" do
     assert %Defb.Page{} = page = Defb.Page.new("5xx.json", @json_content)
     assert page.content_type == "application/json"
     assert page.ext == "json"
-    assert page.multi_match? == true
+    assert page.multi_match == true
   end
 
   test "new/1 with a map returns a list of %Page{}" do

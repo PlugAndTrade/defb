@@ -91,4 +91,8 @@ defmodule Defb.ServiceErrorTest do
 
     assert Defb.ServiceError.full_name(svc_error) == "default/test"
   end
+
+  test "full_name/2 returns namespace + name" do
+    assert "test/test" == Defb.ServiceError.full_name("test", "test")
+  end
 end

@@ -26,9 +26,11 @@ defmodule Defb.ServiceError do
   end
 
   def full_name(%__MODULE__{name: name, namespace: namespace}),
-    do: namespace <> "/" <> name
+    do: full_name(namespace, name)
 
-  defp actual_name(%{alternate_name: a_name}, name) when not is_nil(a_name),
+  def full_name(namespace, name), do: namespace <> "/" <> name
+
+  defp actual_name(%{alternate_name: a_name}, _name) when not is_nil(a_name),
     do: a_name
 
   defp actual_name(_annotations, name), do: name

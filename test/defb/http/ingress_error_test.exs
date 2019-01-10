@@ -16,7 +16,7 @@ defmodule Defb.HTTP.IngressErrorTest do
   test "from/1 should extract custom errors headers from conn" do
     conn = %Plug.Conn{req_headers: @headers}
 
-    assert %IngressError{} = ing_err = IngressError.from(conn)
+    assert %IngressError{} = IngressError.from(conn)
   end
 
   test "from/1 should have all struct values set" do

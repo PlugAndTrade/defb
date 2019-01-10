@@ -20,7 +20,7 @@ defmodule Defb.HTTP.Router do
   end
 
   get "/introspect/:namespace/:name" do
-    key = namespace <> "/" <> name
+    key = Defb.ServiceError.full_name(namespace, name)
 
     {status_code, response} =
       case Defb.Store.lookup(@store, key) do

@@ -7,7 +7,7 @@ defmodule Defb.Page do
     :content,
     :content_type,
     :ext,
-    :multi_match?
+    :multi_match
   ]
 
   def new(filename, content) do
@@ -18,7 +18,7 @@ defmodule Defb.Page do
       content: content,
       ext: ext,
       content_type: MIME.type(ext),
-      multi_match?: match_multiple?(code)
+      multi_match: match_multiple?(code)
     }
   end
 
@@ -29,7 +29,7 @@ defmodule Defb.Page do
   def match_code?(%__MODULE__{} = file, code) when is_integer(code),
     do: match_code?(file, Integer.to_string(code))
 
-  def match_code?(%__MODULE__{multi_match?: false, status_code: s_code}, code),
+  def match_code?(%__MODULE__{multi_match: false, status_code: s_code}, code),
     do: s_code == code
 
   def match_code?(%__MODULE__{status_code: s_code}, code) do
