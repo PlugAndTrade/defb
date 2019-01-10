@@ -24,8 +24,11 @@ FROM alpine
 RUN apk add --no-cache bash libcrypto1.0 tzdata
 
 WORKDIR /defb
+RUN mkdir -p /etc/defb
 
 COPY --from=0 /app/defb/_build/prod/rel/defb/releases/latest/defb.tar.gz /tmp/
+COPY --from=0 /app/defb/pages /etc/defb/pages
+
 RUN tar xvzf /tmp/defb.tar.gz && rm -f /tmp/defb.tar.gz
 
 ENV REPLACE_OS_VARS true
