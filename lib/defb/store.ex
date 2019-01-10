@@ -6,9 +6,9 @@ defmodule Defb.Store do
   alias Defb.ServiceError
 
   @fallback_name ServiceError.full_name(
-    Application.get_env(:defb, :fallback_namespace),
-    Application.get_env(:defb, :fallback_name)
-  )
+                   Application.get_env(:defb, :fallback_namespace),
+                   Application.get_env(:defb, :fallback_name)
+                 )
 
   def lookup(table, name) do
     case :ets.lookup(table, name) do

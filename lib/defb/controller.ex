@@ -41,7 +41,9 @@ defmodule Defb.Controller do
 
       {:error, reason} ->
         Logger.error(fn ->
-          "#{__MODULE__} :: ADD #{Defb.ServiceError.full_name(resource)} failed: #{inspect(reason)}"
+          "#{__MODULE__} :: ADD #{Defb.ServiceError.full_name(resource)} failed: #{
+            inspect(reason)
+          }"
         end)
     end
 
@@ -73,7 +75,9 @@ defmodule Defb.Controller do
   def handle_deleted(%Watcher.Event{object: object}, %{store: store} = state) do
     resource = Defb.ServiceError.from(object)
 
-    Logger.info(fn -> "#{__MODULE__} DELETE :: resource #{Defb.ServiceError.full_name(resource)}" end)
+    Logger.info(fn ->
+      "#{__MODULE__} DELETE :: resource #{Defb.ServiceError.full_name(resource)}"
+    end)
 
     Defb.Store.delete(store, resource)
 

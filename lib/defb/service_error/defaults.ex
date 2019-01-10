@@ -12,11 +12,13 @@ defmodule Defb.ServiceError.Defaults do
   end
 
   def run({path, store}) do
-    pages = read_all(path)
+    files = read_all(path)
+    pages = Defb.Page.new(files)
+
     error = %Defb.ServiceError{name: @name, namespace: @namespace, pages: pages}
 
     types =
-      pages
+      files
       |> Enum.map(fn {file, _} -> file end)
       |> Enum.join("\n")
 
