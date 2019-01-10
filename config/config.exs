@@ -34,6 +34,6 @@ config :defb,
     api_server: {:system, "K8S_API_SERVER", "http://localhost:8001"},
     mode: {:system, :atom, "K8S_MODE", :proxy}
   ],
-  pages_dir: {:system, "PAGES_DIR", "/var/defb/pages"},
+  pages_dir: {:system, "PAGES_DIR", "/etc/defb/pages"},
   fallback_name: "__FALLBACK__",
   fallback_namespace: "__FALLBACK__"
