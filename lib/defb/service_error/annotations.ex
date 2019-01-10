@@ -1,5 +1,5 @@
 defmodule Defb.ServiceError.Annotations do
-  @prefix "nginx-custom-errors"
+  @prefix Application.get_env(:defb, :annotation_prefix)
   @annotation_keys ~w(alternate-name)
 
   def parse(annotations) do

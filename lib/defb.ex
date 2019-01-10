@@ -2,8 +2,8 @@ defmodule Defb do
   use Application
   require Logger
 
-  @boot_msg "[Defb] default-backend started"
-  @label_selector "app.kubernetes.io/custom-errors=defb"
+  @boot_msg "[Defb] default-http-backend defb started"
+  @label_selector Application.get_env(:defb, :label_selector)
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false

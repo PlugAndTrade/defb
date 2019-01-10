@@ -36,4 +36,6 @@ config :defb,
   ],
   pages_dir: {:system, "PAGES_DIR", "/etc/defb/pages"},
   fallback_name: "__FALLBACK__",
-  fallback_namespace: "__FALLBACK__"
+  fallback_namespace: "__FALLBACK__",
+  annotations_prefix: "default-http-backend",
+  label_selector: "app.kubernetes.io/part-of=defb"

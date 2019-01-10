@@ -9,6 +9,7 @@ defmodule Defb.ServiceErrorTest do
     "500.html" => "<p>test</p>"
   }
   @annotations %{}
+  @prefix Application.get_env(:defb, :annotation_prefix)
 
   setup do
     configmap = %ConfigMap{
@@ -39,7 +40,7 @@ defmodule Defb.ServiceErrorTest do
       metadata: %ObjectMeta{
         name: "test",
         namespace: "default",
-        annotations: %{"nginx-custom-errors/alternate-name" => name}
+        annotations: %{"#{@prefix}/alternate-name" => name}
       },
       data: @data
     }
