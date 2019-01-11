@@ -1,6 +1,5 @@
 defmodule Defb.Store do
   use GenServer
-  require Logger
 
   alias Defb.HTTP.IngressError
   alias Defb.ServiceError

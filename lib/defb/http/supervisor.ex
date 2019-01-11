@@ -17,7 +17,7 @@ defmodule Defb.HTTP.Supervisor do
       )
     ]
 
-    Logger.info(fn -> "[#{__MODULE__}] :: Starting HTTP server on port #{port}" end,
+    Logger.info(fn -> "Starting HTTP server on port #{port}" end,
       ansi_color: :magenta
     )
 

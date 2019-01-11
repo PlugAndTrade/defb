@@ -8,7 +8,7 @@ defmodule Defb.Controller do
 
   @impl true
   def init(opts) do
-    Logger.info(fn -> "[#{__MODULE__}] :: K8s controller up!" end, ansi_color: :magenta)
+    Logger.debug(fn -> "K8s Controller starting..." end, ansi_color: :magenta)
 
     {:ok,
      %{
@@ -35,13 +35,13 @@ defmodule Defb.Controller do
 
     case Defb.Store.create(store, resource) do
       {:ok, resource} ->
-        Logger.info(fn ->
-          "#{__MODULE__} :: ADD #{Defb.ServiceError.full_name(resource)} successfull!"
+        Logger.debug(fn ->
+          "action=ADD #{Defb.ServiceError.full_name(resource)}"
         end)
 
       {:error, reason} ->
         Logger.error(fn ->
-          "#{__MODULE__} :: ADD #{Defb.ServiceError.full_name(resource)} failed: #{
+          "action=ADD #{Defb.ServiceError.full_name(resource)} error=#{
             inspect(reason)
           }"
         end)
@@ -56,13 +56,13 @@ defmodule Defb.Controller do
 
     case Defb.Store.replace(store, resource) do
       {:ok, resource} ->
-        Logger.info(fn ->
-          "#{__MODULE__} REPLACE :: #{Defb.ServiceError.full_name(resource)} successfull!"
+        Logger.debug(fn ->
+          "action=REPLACE #{Defb.ServiceError.full_name(resource)}"
         end)
 
       {:error, reason} ->
         Logger.error(fn ->
-          "#{__MODULE__} REPLACE :: #{Defb.ServiceError.full_name(resource)} failed: #{
+          "action=REPLACE :: #{Defb.ServiceError.full_name(resource)} error=#{
             inspect(reason)
           }"
         end)
@@ -75,8 +75,8 @@ defmodule Defb.Controller do
   def handle_deleted(%Watcher.Event{object: object}, %{store: store} = state) do
     resource = Defb.ServiceError.from(object)
 
-    Logger.info(fn ->
-      "#{__MODULE__} DELETE :: resource #{Defb.ServiceError.full_name(resource)}"
+    Logger.debug(fn ->
+      "action=DELETE #{Defb.ServiceError.full_name(resource)}"
     end)
 
     Defb.Store.delete(store, resource)
@@ -93,11 +93,11 @@ defmodule Defb.Controller do
 
     case err do
       nil ->
-        Logger.info(fn -> "#{__MODULE__} SYNC :: All items synced" end)
+        Logger.debug(fn -> "action=sync" end)
         :ok
 
       {:error, reason} ->
-        Logger.error(fn -> "Encountered error #{inspect(reason)}" end)
+        Logger.error(fn -> "action=sync error=#{inspect(reason)}" end)
         :ok
     end
 

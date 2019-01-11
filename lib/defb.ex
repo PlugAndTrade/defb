@@ -2,7 +2,7 @@ defmodule Defb do
   use Application
   require Logger
 
-  @boot_msg "[Defb] default-http-backend defb started"
+  @boot_msg "default-http-backend defb started"
   @label_selector Application.get_env(:defb, :label_selector)
 
   def start(_type, _args) do

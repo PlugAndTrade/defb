@@ -29,7 +29,7 @@ defmodule Defb.ServiceError.Defaults do
         end)
 
       err ->
-        Logger.error(fn -> "Fallback templates could not be created: #{inspect(err)}" end)
+        Logger.error(fn -> "Fallback templates could not be created. error=#{inspect(err)}" end)
     end
   end
 end

@@ -40,6 +40,10 @@ config :defb,
   annotations_prefix: "default-http-backend",
   label_selector: "app.kubernetes.io/part-of=defb"
 
+config :logger, :console,
+  format: "\n[$date$time] [$level] $metadata$levelpad$message\n",
+  metadata: [:module, :function]
+
 if File.exists?(Path.join(__DIR__, "#{Mix.env()}.exs")) do
   import_config "#{Mix.env()}.exs"
 end
