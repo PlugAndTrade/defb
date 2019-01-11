@@ -3,8 +3,7 @@ defmodule Defb.Controller do
   require Logger
 
   alias Kazan.Watcher
-  alias Kazan.Apis.Core.V1.{ConfigMap, ConfigMapList}
-  alias Kazan.Models.Apimachinery.Meta.V1.ObjectMeta
+  alias Kazan.Apis.Core.V1.ConfigMapList
 
   @impl true
   def init(opts) do
@@ -41,9 +40,7 @@ defmodule Defb.Controller do
 
       {:error, reason} ->
         Logger.error(fn ->
-          "action=ADD #{Defb.ServiceError.full_name(resource)} error=#{
-            inspect(reason)
-          }"
+          "action=ADD #{Defb.ServiceError.full_name(resource)} error=#{inspect(reason)}"
         end)
     end
 
@@ -62,9 +59,7 @@ defmodule Defb.Controller do
 
       {:error, reason} ->
         Logger.error(fn ->
-          "action=REPLACE :: #{Defb.ServiceError.full_name(resource)} error=#{
-            inspect(reason)
-          }"
+          "action=REPLACE :: #{Defb.ServiceError.full_name(resource)} error=#{inspect(reason)}"
         end)
     end
 
