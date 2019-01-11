@@ -39,3 +39,7 @@ config :defb,
   fallback_namespace: "__FALLBACK__",
   annotations_prefix: "default-http-backend",
   label_selector: "app.kubernetes.io/part-of=defb"
+
+if File.exists?(Path.join(__DIR__, "#{Mix.env()}.exs")) do
+  import_config "#{Mix.env()}.exs"
+end
