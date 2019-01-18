@@ -7,12 +7,15 @@ defmodule Defb.Controller do
 
   @impl true
   def init(opts) do
-    Logger.debug(fn -> "K8s Controller starting..." end, ansi_color: :magenta)
+    %Kazan.Server{url: url} = conn = Keyword.fetch!(opts, :conn)
+    store = Keyword.fetch!(opts, :store)
+
+    Logger.debug(fn -> "K8s Controller starting api-server=#{inspect url}" end, ansi_color: :magenta)
 
     {:ok,
      %{
-       conn: Keyword.fetch!(opts, :conn),
-       store: Keyword.fetch!(opts, :store)
+       conn: conn,
+       store: store
      }}
   end
 
@@ -81,14 +84,12 @@ defmodule Defb.Controller do
 
   @impl Netex.Controller
   def handle_sync(%ConfigMapList{items: items}, %{store: store} = state) do
-    err =
-      items
-      |> Enum.map(&Defb.Store.create(store, Defb.ServiceError.from(&1)))
-      |> Enum.find(fn {result, _} -> result == :error end)
+    svc_errors = for item <- items, do: Defb.Store.create(store, Defb.ServiceError.from(item))
+    err = Enum.find(svc_errors, fn {result, _} -> result == :error end)
 
     case err do
       nil ->
-        Logger.debug(fn -> "action=sync" end)
+        Logger.debug(fn -> "action=sync svcs=\n#{pp_svc_errors(svc_errors)}" end)
         :ok
 
       {:error, reason} ->
@@ -97,5 +98,11 @@ defmodule Defb.Controller do
     end
 
     state
+  end
+
+  defp pp_svc_errors(svc_errors) do
+    svc_errors
+    |> Enum.map(&Defb.ServiceError.full_name(&1))
+    |> Enum.join("\n")
   end
 end
