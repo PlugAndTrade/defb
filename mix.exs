@@ -27,7 +27,7 @@ defmodule Defb.MixProject do
       {:mime, "~> 1.2"},
       {:poison, "~> 4.0.0"},
       {:netex,
-       git: "https://github.com/drowzy/netex", ref: "2730a3f193cfefafaf2c3323d0b89889b95d0dee"},
+       git: "https://github.com/drowzy/netex", ref: "6db2abc0a3f8feb41772acd8336431e2110b18b1"},
       {:plug, "~> 1.7"},
       {:plug_cowboy, "~> 2.0"},
       {:distillery, "~> 2.0", runtime: false}
