@@ -35,3 +35,6 @@ data:
       "message": "generic json error"
     }
 ```
+
+## Metrics
+Prometheus metrics are exposed on port 3000 `/metrics`

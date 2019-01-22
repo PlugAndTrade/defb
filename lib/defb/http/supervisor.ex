@@ -2,6 +2,8 @@ defmodule Defb.HTTP.Supervisor do
   use Supervisor
   require Logger
 
+  @timeout 70_000
+
   def start_link(opts) do
     Supervisor.start_link(__MODULE__, opts, opts)
   end
@@ -10,10 +12,20 @@ defmodule Defb.HTTP.Supervisor do
     port = Keyword.get(opts, :port, 4000)
 
     children = [
+      {Defb.HTTP.Prometheus.Boot, []},
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: Defb.HTTP.Router,
-        options: [port: port, timeout: 70_000]
+        options: [port: port, timeout: @timeout]
+      ),
+      Plug.Cowboy.child_spec(
+        scheme: :http,
+        plug: Defb.HTTP.Prometheus.MetricsExporter,
+        options: [
+          port: 3000,
+          timeout: @timeout,
+          transport_options: [num_acceptors: 10]
+        ]
       )
     ]
 

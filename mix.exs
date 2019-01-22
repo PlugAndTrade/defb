@@ -30,6 +30,8 @@ defmodule Defb.MixProject do
        git: "https://github.com/drowzy/netex", ref: "6db2abc0a3f8feb41772acd8336431e2110b18b1"},
       {:plug, "~> 1.7"},
       {:plug_cowboy, "~> 2.0"},
+      {:prometheus_ex, "~> 3.0"},
+      {:prometheus_plugs, "~> 1.0"},
       {:distillery, "~> 2.0", runtime: false}
     ]
   end

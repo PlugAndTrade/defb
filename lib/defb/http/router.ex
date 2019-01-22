@@ -1,9 +1,9 @@
 defmodule Defb.HTTP.Router do
   use Plug.Router
   use Plug.ErrorHandler
-  require Logger
 
   alias Defb.HTTP.IngressError
+  alias Defb.HTTP.Prometheus.Instrumenter
 
   plug(Plug.Logger, log: :debug)
   plug(:match)
@@ -35,6 +35,7 @@ defmodule Defb.HTTP.Router do
 
   match _ do
     %IngressError{code: status_code} = ing_err = IngressError.from(conn)
+    :ok = inc_upstream_unavailable(ing_err)
 
     {content_type, content} =
       case Defb.Store.resolve(@store, ing_err) do
@@ -49,5 +50,15 @@ defmodule Defb.HTTP.Router do
     conn
     |> Plug.Conn.put_resp_content_type(content_type)
     |> Plug.Conn.send_resp(status_code, content)
+  end
+
+  defp inc_upstream_unavailable(ing_err) do
+    if IngressError.valid?(ing_err) do
+      ing_err
+      |> Instrumenter.to_labels()
+      |> Instrumenter.inc()
+    else
+      :ok
+    end
   end
 end
