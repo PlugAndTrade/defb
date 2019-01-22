@@ -10,7 +10,9 @@ defmodule Defb.Controller do
     %Kazan.Server{url: url} = conn = Keyword.fetch!(opts, :conn)
     store = Keyword.fetch!(opts, :store)
 
-    Logger.debug(fn -> "K8s Controller starting api-server=#{inspect url}" end, ansi_color: :magenta)
+    Logger.debug(fn -> "K8s Controller starting api-server=#{inspect(url)}" end,
+      ansi_color: :magenta
+    )
 
     {:ok,
      %{
@@ -84,7 +86,9 @@ defmodule Defb.Controller do
 
   @impl Netex.Controller
   def handle_sync(%ConfigMapList{items: items}, %{store: store} = state) do
-    svc_errors = for item <- items, do: Defb.Store.create(store, Defb.ServiceError.from(item))
+    svc_errors =
+      for {:ok, item} <- items, do: Defb.Store.create(store, Defb.ServiceError.from(item))
+
     err = Enum.find(svc_errors, fn {result, _} -> result == :error end)
 
     case err do
