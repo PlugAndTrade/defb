@@ -41,4 +41,11 @@ defmodule Defb.HTTP.IngressError do
     |> String.replace("-", "_")
     |> String.to_existing_atom()
   end
+
+  def valid?(%__MODULE__{} = ie) do
+    ie
+    |> Map.from_struct()
+    |> Map.values()
+    |> Enum.all?(&(not is_nil(&1)))
+  end
 end

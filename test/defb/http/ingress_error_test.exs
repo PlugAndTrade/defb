@@ -30,4 +30,20 @@ defmodule Defb.HTTP.IngressErrorTest do
     assert ing_err.service_name == "test-service"
     assert ing_err.service_port == "80"
   end
+
+  test "valid?/1 returns true if all fields are set" do
+    conn = %Plug.Conn{req_headers: @headers}
+
+    assert conn
+           |> IngressError.from()
+           |> IngressError.valid?()
+  end
+
+  test "valid?/1 returns false any fields are not set" do
+    conn = %Plug.Conn{req_headers: []}
+
+    refute conn
+           |> IngressError.from()
+           |> IngressError.valid?()
+  end
 end
