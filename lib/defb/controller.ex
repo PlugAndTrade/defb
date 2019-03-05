@@ -87,13 +87,14 @@ defmodule Defb.Controller do
   @impl Netex.Controller
   def handle_sync(%ConfigMapList{items: items}, %{store: store} = state) do
     svc_errors =
-      for {:ok, item} <- items, do: Defb.Store.create(store, Defb.ServiceError.from(item))
+      for item <- items, do: Defb.Store.create(store, Defb.ServiceError.from(item))
 
     err = Enum.find(svc_errors, fn {result, _} -> result == :error end)
 
     case err do
       nil ->
-        Logger.debug(fn -> "action=sync svcs=\n#{pp_svc_errors(svc_errors)}" end)
+        configs = Enum.map(svc_errors, fn {_, c} -> c end)
+        Logger.debug(fn -> "action=sync svcs=\n#{pp_svc_errors(configs)}" end)
         :ok
 
       {:error, reason} ->
