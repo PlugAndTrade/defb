@@ -21,7 +21,7 @@ RUN mix compile --env=prod && \
 
 FROM alpine
 
-RUN apk add --no-cache bash libcrypto1.0 tzdata
+RUN apk add --no-cache bash ncurses-libs tzdata openssl
 
 WORKDIR /defb
 RUN mkdir -p /etc/defb
